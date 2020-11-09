@@ -26,12 +26,21 @@ check_sun = CheckSun('London')
 #camera.compute_awb()
 
 latest_file = os.path.join(output_directory, 'latest.{}'.format(file_ext))
+last_profile = None
 
 while True:
     started = time.time()
     profile_name = check_sun.get_profile()
     profile = camera_profiles[profile_name]
     print('{}: {}'.format(profile_name, profile))
+
+    if last_profile != profile_name:
+        print('Switching profile : {} => {}'.format(last_profile, profile_name))
+        last_profile = profile_name
+        if not profile['awb']:
+            print('Computing AWB for profile {}'.format(profile_name))
+            camera.compute_awb()
+
     temp_file = '/tmp/timelapse_tmp.{}'.format(file_ext)
     camera.capture(profile['iso'], profile['exposure'], temp_file, format=file_format, awb_gains=tuple(profile['awb']))
     output_file = os.path.join(output_directory, time.strftime(time_format))
