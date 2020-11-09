@@ -15,15 +15,15 @@ time_format = '%Y-%m-%dT%H-%M-%S.{}'.format(file_ext)
 
 
 camera_profiles = {
-    'day': { 'exposure': 0, 'iso': 100 },
-    'twilight_bright': { 'exposure': 0, 'iso': 200 },
-    'twilight': { 'exposure': 0, 'iso': 800 },
-    'night': { 'exposure': 15, 'iso': 200 },
+    'day':             { 'exposure': 0 , 'iso': 100, 'awb': None },
+    'twilight_bright': { 'exposure': 0 , 'iso': 200, 'awb': None },
+    'twilight':        { 'exposure': 0 , 'iso': 800, 'awb': None },
+    'night':           { 'exposure': 15, 'iso': 200, 'awb': [2.32421875, 2.41015625] },
 }
 
 camera = Camera()
 check_sun = CheckSun('London')
-camera.compute_awb()
+#camera.compute_awb()
 
 latest_file = os.path.join(output_directory, 'latest.{}'.format(file_ext))
 
@@ -32,8 +32,8 @@ while True:
     profile_name = check_sun.get_profile()
     profile = camera_profiles[profile_name]
     print('{}: {}'.format(profile_name, profile))
-    temp_file = '0000-capture.{}'.format(file_ext)
-    camera.capture(profile['iso'], profile['exposure'], temp_file, format=file_format)
+    temp_file = '/tmp/timelapse_tmp.{}'.format(file_ext)
+    camera.capture(profile['iso'], profile['exposure'], temp_file, format=file_format, awb_gains=tuple(profile['awb']))
     output_file = os.path.join(output_directory, time.strftime(time_format))
     os.rename(temp_file, output_file)
     if os.path.exists(latest_file):
