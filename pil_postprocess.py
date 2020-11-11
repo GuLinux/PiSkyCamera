@@ -17,5 +17,5 @@ def pil_annotate(filename):
 
 def pil_postprocess(filename):
     if settings.pil_annotate_text or settings.pil_annotate_time_format:
-        p = Process(target=filename_format pil_annotate, args=(filename,))
+        p = Process(target=pil_annotate, args=(filename,))
         p.start
