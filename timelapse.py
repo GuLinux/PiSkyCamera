@@ -7,6 +7,7 @@ import sys
 from settings import settings
 from logger import logging
 
+logging.debug('Settings: {}'.format(settings))
 file_ext = 'jpg' if settings.file_format == 'jpeg' else settings.file_format
 
 camera = Camera(resolution=settings.resolution)

@@ -24,6 +24,18 @@ class Camera:
         return awb_gains
 
     def capture(self, filename, format='jpeg'):
+        self.__annotate_text()
+        self.__picamera.capture(filename, **self.__capture_opts(format))
+
+    def capture_continuous(self, filename_format, format='jpeg'):
+        self.__annotate_text()
+        def generator():
+            for filename in self.__picamera.capture_continuous(filename_format, **self.__capture_opts(format)):
+                yield filename
+                self.__annotate_text()
+        return generator()
+
+    def __annotate_text(self):
         if settings.annotate_text:
             self.__picamera.annotate_text = settings.annotate_text
             logging.debug('Camera text annotation: {}'.format(self.__picamera.annotate_text))
@@ -33,12 +45,6 @@ class Camera:
             logging.debug('Camera timestamp annotation: {}'.format(timestamp_annotation))
         else:
             self.__picamera.annotate_text = None
-
-
-        self.__picamera.capture(filename, **self.__capture_opts(format))
-
-    def capture_continuous(self, filename_format, format='jpeg'):
-        return self.__picamera.capture_continuous(filename_format, **self.__capture_opts(format))
 
     def __capture_opts(self, format):
         opts = {
