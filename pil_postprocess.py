@@ -10,6 +10,7 @@ def pil_annotate(filename):
     draw = ImageDraw.Draw(img)
     font = ImageFont.truetype(settings.pil_annotate_text_font, settings.pil_annotate_text_size)
     text = time.strftime(settings.pil_annotate_time_format) if settings.pil_annotate_time_format else settings.pil_annotate_text
+    logging.debug('Annottating {} using text "{}" with PIL'.format(filename, text))
     draw.text(settings.pil_annotate_text_position, text, settings.pil_annotate_foreground,font=font)
     img.save(filename)
 
