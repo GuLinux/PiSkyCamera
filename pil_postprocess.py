@@ -1,6 +1,6 @@
 from settings import settings
 import time
-from logger import logging
+#from logger import logging
 from PIL import Image, ImageFont, ImageDraw
 from multiprocessing import Process
 
@@ -13,7 +13,7 @@ def pil_annotate(filename):
     text = time.strftime(settings.pil_annotate_time_format) if settings.pil_annotate_time_format else settings.pil_annotate_text
     draw.text(settings.pil_annotate_text_position, text, settings.pil_annotate_foreground,font=font)
     img.save(filename)
-    logging.debug('pil_annotate: file={}, text="{}", elapsed: {}'.format(filename, text, time.time() - started))
+#    logging.debug('pil_annotate: file={}, text="{}", elapsed: {}'.format(filename, text, time.time() - started))
 
 
 
