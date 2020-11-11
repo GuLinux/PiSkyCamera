@@ -33,9 +33,9 @@ class Camera:
         self.__annotate_text()
         def generator():
             for filename in self.__picamera.capture_continuous(filename_format, **self.__capture_opts(format)):
+                pil_postprocess(filename)
                 yield filename
                 self.__annotate_text()
-                pil_postprocess(filename)
 
         return generator()
 
