@@ -2,6 +2,7 @@ from picamera import PiCamera
 from picamera.color import Color
 import time
 from settings import settings
+from logger import logging
 
 FRAMERATE_RANGE_DEFAULT = (0.005,15)
 USE_VIDEO_PORT = True
@@ -29,6 +30,7 @@ class Camera:
             self.__picamera.annotate_text = time.strftime(settings.annotate_time_format)
         else:
             self.__picamera.annotate_text = None
+        logging.debug('Camera text annotation: {}'.format(self.__picamera.annotate_text))
 
         self.__picamera.capture(filename, **self.__capture_opts(format))
 
