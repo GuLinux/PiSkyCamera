@@ -12,6 +12,11 @@ settings = {
     'default_profile': { 'exposure': 0, 'iso': 100 },
     'symlink_latest': True,
     'jpeg_quality': 85,
+    'annotate_background': None,
+    'annotate_foreground': None,
+    'annotate_text_size': None,
+    'annotate_text': None,
+    'annotate_time_format': None,
 }
 
 # camera_profiles = {

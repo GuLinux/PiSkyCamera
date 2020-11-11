@@ -22,6 +22,13 @@ class Camera:
         return awb_gains
 
     def capture(self, filename, format='jpeg'):
+        if settings.annotate_text:
+            self.__picamera.annotate_text = settings.annotate_text
+        elif settings.annotate_time_format:
+            self.__picamera.annotate_text = time.strftime(settings.annotate_time_format)
+        else:
+            self.__picamera.annotate_text = None
+
         self.__picamera.capture(filename, **self.__capture_opts(format))
 
     def capture_continuous(self, filename_format, format='jpeg'):
@@ -48,5 +55,7 @@ class Camera:
 
         self.__picamera.shutter_speed = int(shutter_speed * 1000 * 1000)
         self.__picamera.iso = iso
-
+        self.__picamera.annotate_background = settings.annotate_background
+        self.__picamera.annotate_foreground = settings.annotate_foreground
+        self.__picamera.annotate_text_size = settings.annotate_text_size
 
