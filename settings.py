@@ -25,6 +25,7 @@ settings = {
     'pil_annotate_text': None,
     'pil_annotate_time_format': None,
     'pil_annotate_text_position': (0,0),
+    'pil_save_preview': None,
 }
 
 # camera_profiles = {
