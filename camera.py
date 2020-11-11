@@ -56,7 +56,10 @@ class Camera:
 
         self.__picamera.shutter_speed = int(shutter_speed * 1000 * 1000)
         self.__picamera.iso = iso
-        self.__picamera.annotate_background = Color(settings.annotate_background) if settings.annotate_background
-        self.__picamera.annotate_foreground = Color(settings.annotate_foreground) if settings.annotate_foreground
-        self.__picamera.annotate_text_size = settings.annotate_text_size if settings.annotate_text_size
+        if settings.annotate_background:
+            self.__picamera.annotate_background = Color(settings.annotate_background)
+        if settings.annotate_foreground:
+            self.__picamera.annotate_foreground = Color(settings.annotate_foreground)
+        if settings.annotate_text_size:
+            self.__picamera.annotate_text_size = settings.annotate_text_size
 
