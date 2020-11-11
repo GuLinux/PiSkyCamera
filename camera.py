@@ -3,6 +3,8 @@ from picamera.color import Color
 import time
 from settings import settings
 from logger import logging
+from pil_postprocess import pil_postprocess
+
 
 FRAMERATE_RANGE_DEFAULT = (0.005,15)
 USE_VIDEO_PORT = True
@@ -33,6 +35,8 @@ class Camera:
             for filename in self.__picamera.capture_continuous(filename_format, **self.__capture_opts(format)):
                 yield filename
                 self.__annotate_text()
+                pil_postprocess(filename)
+
         return generator()
 
     def __annotate_text(self):

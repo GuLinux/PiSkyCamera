@@ -19,6 +19,12 @@ settings = {
     'annotate_text': None,
     'annotate_time_format': None,
     'log_level': logging.WARNING,
+    'pil_annotate_foreground': (255,255,255),
+    'pil_annotate_text_size': 10,
+    'pil_annotate_text_font': 'sans-serif.ttf',
+    'pil_annotate_text': None,
+    'pil_annotate_time_format': None,
+    'pil_annotate_text_position': (0,0),
 }
 
 # camera_profiles = {
