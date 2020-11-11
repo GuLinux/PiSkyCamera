@@ -5,6 +5,7 @@ import time
 import os
 import sys
 from settings import settings
+from logger import logging
 
 file_ext = 'jpg' if settings.file_format == 'jpeg' else settings.file_format
 
