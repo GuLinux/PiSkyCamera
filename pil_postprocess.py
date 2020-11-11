@@ -25,11 +25,12 @@ def pil_annotate(img):
 
 def pil_save_preview(img):
     if settings.pil_save_preview:
-        filename = settings.pil_save_preview['filename']
+        filename = os.path.join(settings.output_directory, settings.pil_save_preview['filename'])
         quality = settings.pil_save_preview.get('quality', 75)
         resolution = settings.pil_save_preview.get('resolution', img.size)
         resized = img.resize(resolution)
-        img.save(filename, quality=quality)
+        resized = resized.convert('RGB')
+        resized.save(filename, quality=quality)
 
 
 def pil_postprocess(filename):
