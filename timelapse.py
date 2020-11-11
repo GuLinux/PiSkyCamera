@@ -28,13 +28,13 @@ while True:
 
         profile_name = check_sun.get_profile()
         profile = settings.profiles.get(profile_name, settings.default_profile)
-        print('{}: {}'.format(profile_name, profile))
+        logging.debug('{}: {}'.format(profile_name, profile))
 
         if last_profile != profile_name:
-            print('Switching profile : {} => {}'.format(last_profile, profile_name))
+            logging.info('Switching profile : {} => {}'.format(last_profile, profile_name))
             last_profile = profile_name
             if not profile.get('awb'):
-                print('Computing AWB for profile {}'.format(profile_name))
+                logging.debug('Computing AWB for profile {}'.format(profile_name))
                 camera.compute_awb()
             camera.setup_capture(profile['iso'], profile['exposure'], profile.get('awb'), profile.get('exposure_mode', 'off'))
 
@@ -44,7 +44,7 @@ while True:
         elapsed = finished - latest_capture 
         latest_capture = finished
         sleep_time = max(0, settings.timelapse_seconds - elapsed)
-        print('{}, {}: elapsed: {}, sleeping for: {}'.format(profile_name, filename, elapsed, sleep_time))
+        logging.debug('{}, {}: elapsed: {}, sleeping for: {}'.format(profile_name, filename, elapsed, sleep_time))
         if settings.symlink_latest:
             symlink_latest(filename)
         time.sleep(sleep_time)

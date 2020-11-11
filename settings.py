@@ -1,4 +1,5 @@
 from collections import namedtuple
+import logging
 import os
 
 settings = {
@@ -17,6 +18,7 @@ settings = {
     'annotate_text_size': None,
     'annotate_text': None,
     'annotate_time_format': None,
+    'log_level': logging.WARNING,
 }
 
 # camera_profiles = {
