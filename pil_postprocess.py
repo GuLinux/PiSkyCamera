@@ -1,6 +1,6 @@
 from settings import settings
 import time
-from logging import logger
+from logger import logging
 from PIL import Image, ImageFont, ImageDraw
 from multiprocessing import Process
 
