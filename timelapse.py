@@ -4,53 +4,50 @@ from camera import Camera
 import time
 import os
 import sys
+from settings import settings
 
-output_directory = '/home/pi/timelapse'
-timelapse_secs = 60
+file_ext = 'jpg' if settings.file_format == 'jpeg' else settings.file_format
 
-file_format='png'
-file_ext = 'jpg' if file_format == 'jpeg' else file_format
-
-time_format = '%Y-%m-%dT%H-%M-%S.{}'.format(file_ext)
-
-
-camera_profiles = {
-    'day':             { 'exposure': 0 , 'iso': 100, 'awb': None },
-    'twilight_bright': { 'exposure': 0 , 'iso': 200, 'awb': None },
-    'twilight':        { 'exposure': 0 , 'iso': 800, 'awb': None },
-    'night':           { 'exposure': 15, 'iso': 200, 'awb': [2.32421875, 2.41015625] },
-}
-
-camera = Camera()
-check_sun = CheckSun('London')
+camera = Camera(resolution=settings.resolution)
+check_sun = CheckSun(settings.city)
 #camera.compute_awb()
 
-latest_file = os.path.join(output_directory, 'latest.{}'.format(file_ext))
+
 last_profile = None
+output_file_format = os.path.join(settings.output_directory, '{timestamp:%Y-%m-%d-%H-%M-%S}.' + file_ext)
+
+def symlink_latest(filename):
+    latest_file = os.path.join(settings.output_directory, 'latest.{}'.format(file_ext))
+    if os.path.islink(latest_file):
+        os.remove(latest_file)
+    os.symlink(filename, latest_file)
 
 while True:
-    started = time.time()
-    profile_name = check_sun.get_profile()
-    profile = camera_profiles[profile_name]
-    print('{}: {}'.format(profile_name, profile))
+    latest_capture = time.time()
+    for filename in camera.capture_continuous(output_file_format, format=settings.file_format):
 
-    if last_profile != profile_name:
-        print('Switching profile : {} => {}'.format(last_profile, profile_name))
-        last_profile = profile_name
-        if not profile['awb']:
-            print('Computing AWB for profile {}'.format(profile_name))
-            camera.compute_awb()
+        profile_name = check_sun.get_profile()
+        profile = settings.profiles.get(profile_name, settings.default_profile)
+        print('{}: {}'.format(profile_name, profile))
 
-    temp_file = '/tmp/timelapse_tmp.{}'.format(file_ext)
-    camera.capture(profile['iso'], profile['exposure'], temp_file, format=file_format, awb_gains=tuple(profile['awb']))
-    output_file = os.path.join(output_directory, time.strftime(time_format))
-    os.rename(temp_file, output_file)
-    if os.path.exists(latest_file):
-        os.remove(latest_file)
-    os.symlink(output_file, latest_file)
-    finished = time.time()
-    elapsed = finished - started
-    sleep_time = max(0, timelapse_secs - elapsed)
-    print('elapsed: {}, sleeping for: {}'.format(elapsed, sleep_time))
-    time.sleep(sleep_time)
+        if last_profile != profile_name:
+            print('Switching profile : {} => {}'.format(last_profile, profile_name))
+            last_profile = profile_name
+            if not profile.get('awb'):
+                print('Computing AWB for profile {}'.format(profile_name))
+                camera.compute_awb()
+            camera.setup_capture(profile['iso'], profile['exposure'], profile.get('awb'), profile.get('exposure_mode', 'off'))
+
+
+
+        finished = time.time()
+        elapsed = finished - latest_capture 
+        latest_capture = finished
+        sleep_time = max(0, settings.timelapse_seconds - elapsed)
+        print('{}, {}: elapsed: {}, sleeping for: {}'.format(profile_name, filename, elapsed, sleep_time))
+        if settings.symlink_latest:
+            symlink_latest(filename)
+        time.sleep(sleep_time)
+
+
 

@@ -1,11 +1,12 @@
 #!/usr/bin/env python3
 from camera import Camera
 import sys
+from settings import settings
 
 def to_dec(fraction):
     return fraction.numerator / fraction.denominator
 
-camera = Camera()
+camera = Camera(resolution=settings.resolution)
 try:
     awb_gains = camera.compute_awb(iso=int(sys.argv[1]), awb_mode=sys.argv[2], shutter=int(sys.argv[3]) * 1000*1000, seconds=int(sys.argv[4]))
     print(awb_gains)
