@@ -1,4 +1,5 @@
 from settings import settings
+import os
 import time
 from logger import logging
 from PIL import Image, ImageFont, ImageDraw
