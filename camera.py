@@ -26,11 +26,14 @@ class Camera:
     def capture(self, filename, format='jpeg'):
         if settings.annotate_text:
             self.__picamera.annotate_text = settings.annotate_text
+            logging.debug('Camera text annotation: {}'.format(self.__picamera.annotate_text))
         elif settings.annotate_time_format:
-            self.__picamera.annotate_text = time.strftime(settings.annotate_time_format)
+            timestamp_annotation = time.strftime(settings.annotate_time_format)
+            self.__picamera.annotate_text = timestamp_annotation
+            logging.debug('Camera timestamp annotation: {}'.format(timestamp_annotation))
         else:
             self.__picamera.annotate_text = None
-        logging.debug('Camera text annotation: {}'.format(self.__picamera.annotate_text))
+
 
         self.__picamera.capture(filename, **self.__capture_opts(format))
 
