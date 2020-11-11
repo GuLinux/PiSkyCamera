@@ -1,9 +1,11 @@
 from settings import settings
 import time
-#from logger import logging
+from logger import logging
 from PIL import Image, ImageFont, ImageDraw
 from multiprocessing import Process
 
+pil_logger = logging.getLogger('PIL')
+pil_logger.setLevel(logging.INFO)
 
 def pil_annotate(filename):
     started = time.time()
