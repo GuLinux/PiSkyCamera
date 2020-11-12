@@ -55,7 +55,6 @@ class Camera:
         opts = {
             'format': format,
             'use_video_port': settings.use_video_port,
-            'burst': settings.burst,
         }
         if format == 'jpeg':
             opts['quality'] = settings.jpeg_quality
