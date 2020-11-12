@@ -24,8 +24,9 @@ def symlink_latest(filename):
         os.remove(latest_file)
     os.symlink(filename, latest_file)
 
-latest_capture = time.time()
-for filename in camera.capture_continuous(output_file_format, format=settings.file_format):
+
+while True:
+    filename = time.strftime(output_file_format)
 
     profile_name = check_sun.get_profile()
     profile = settings.profiles.get(profile_name, settings.default_profile)
@@ -39,11 +40,11 @@ for filename in camera.capture_continuous(output_file_format, format=settings.fi
             camera.compute_awb()
         camera.setup_capture(profile['iso'], profile['exposure'], profile.get('awb'), profile.get('exposure_mode', 'off'))
 
-
+    latest_capture = time.time()
+    camera.capture(filename, format=settings.file_format)
 
     finished = time.time()
     elapsed = finished - latest_capture 
-    latest_capture = finished
     sleep_time = max(0, settings.timelapse_seconds - elapsed)
     logging.debug('{}, {}: elapsed: {}, sleeping for: {}'.format(profile_name, filename, elapsed, sleep_time))
     if settings.symlink_latest:

@@ -28,6 +28,7 @@ class Camera:
     def capture(self, filename, format='jpeg'):
         self.__annotate_text()
         self.__picamera.capture(filename, **self.__capture_opts(format))
+        pil_postprocess(filename)
 
     def capture_continuous(self, filename_format, format='jpeg'):
         self.__annotate_text()
