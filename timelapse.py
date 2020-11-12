@@ -24,32 +24,31 @@ def symlink_latest(filename):
         os.remove(latest_file)
     os.symlink(filename, latest_file)
 
-while True:
-    latest_capture = time.time()
-    for filename in camera.capture_continuous(output_file_format, format=settings.file_format):
+latest_capture = time.time()
+for filename in camera.capture_continuous(output_file_format, format=settings.file_format):
 
-        profile_name = check_sun.get_profile()
-        profile = settings.profiles.get(profile_name, settings.default_profile)
-        logging.debug('{}: {}'.format(profile_name, profile))
+    profile_name = check_sun.get_profile()
+    profile = settings.profiles.get(profile_name, settings.default_profile)
+    logging.debug('{}: {}'.format(profile_name, profile))
 
-        if last_profile != profile_name:
-            logging.info('Switching profile : {} => {}'.format(last_profile, profile_name))
-            last_profile = profile_name
-            if not profile.get('awb'):
-                logging.debug('Computing AWB for profile {}'.format(profile_name))
-                camera.compute_awb()
-            camera.setup_capture(profile['iso'], profile['exposure'], profile.get('awb'), profile.get('exposure_mode', 'off'))
-
+    if last_profile != profile_name:
+        logging.info('Switching profile : {} => {}'.format(last_profile, profile_name))
+        last_profile = profile_name
+        if not profile.get('awb'):
+            logging.debug('Computing AWB for profile {}'.format(profile_name))
+            camera.compute_awb()
+        camera.setup_capture(profile['iso'], profile['exposure'], profile.get('awb'), profile.get('exposure_mode', 'off'))
 
 
-        finished = time.time()
-        elapsed = finished - latest_capture 
-        latest_capture = finished
-        sleep_time = max(0, settings.timelapse_seconds - elapsed)
-        logging.debug('{}, {}: elapsed: {}, sleeping for: {}'.format(profile_name, filename, elapsed, sleep_time))
-        if settings.symlink_latest:
-            symlink_latest(filename)
-        time.sleep(sleep_time)
+
+    finished = time.time()
+    elapsed = finished - latest_capture 
+    latest_capture = finished
+    sleep_time = max(0, settings.timelapse_seconds - elapsed)
+    logging.debug('{}, {}: elapsed: {}, sleeping for: {}'.format(profile_name, filename, elapsed, sleep_time))
+    if settings.symlink_latest:
+        symlink_latest(filename)
+    time.sleep(sleep_time)
 
 
 
