@@ -5,6 +5,8 @@ from settings import settings
 from logger import logging
 from pil_postprocess import pil_postprocess
 
+if settings.capture_timeout:
+    PiCamera.CAPTURE_TIMEOUT = settings.capture_timeout
 
 FRAMERATE_RANGE_DEFAULT = (0.005,15)
 

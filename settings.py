@@ -4,6 +4,7 @@ import os
 
 settings = {
     'resolution': (4056, 3040),
+    'capture_timeout': None,
     'city': 'London',
     'file_format': 'jpeg',
     'output_directory': os.path.join(os.environ['HOME'], 'timelapse'),
