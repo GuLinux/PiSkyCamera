@@ -16,7 +16,7 @@ check_sun = CheckSun(settings.city)
 
 
 last_profile = None
-output_file_format = os.path.join(settings.output_directory, '%Y-%m-%d-%H-%M-%S.' + file_ext)
+output_file_format = os.path.join(settings.output_directory, '%Y-%m-%dT%H-%M-%S.' + file_ext)
 
 def symlink_latest(filename):
     latest_file = os.path.join(settings.output_directory, 'latest.{}'.format(file_ext))
