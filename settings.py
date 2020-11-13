@@ -10,6 +10,7 @@ settings = {
     'output_directory': os.path.join(os.environ['HOME'], 'timelapse'),
     'timelapse_seconds': 10,
     'profiles': {},
+    'file_timestamp_format': '%Y-%m-%dT%H-%M-%S'
     'default_profile': { 'exposure': 0, 'iso': 100, 'exposure_mode': 'auto', 'use_video_port': False },
     'symlink_latest': True,
     'jpeg_quality': 85,
