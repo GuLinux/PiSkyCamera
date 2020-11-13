@@ -7,7 +7,6 @@ from pil_postprocess import pil_postprocess
 
 
 FRAMERATE_RANGE_DEFAULT = (0.005,15)
-USE_VIDEO_PORT = True
 
 class Camera:
     def __init__(self, resolution=(4056, 3040)):
@@ -25,15 +24,15 @@ class Camera:
         self.__picamera.awb_gains = awb_gains
         return awb_gains
 
-    def capture(self, filename, format='jpeg'):
+    def capture(self, filename, format='jpeg', use_video_port=False):
         self.__annotate_text()
-        self.__picamera.capture(filename, **self.__capture_opts(format))
+        self.__picamera.capture(filename, **self.__capture_opts(format, use_video_port))
         pil_postprocess(filename)
 
-    def capture_continuous(self, filename_format, format='jpeg'):
+    def capture_continuous(self, filename_format, format='jpeg', use_video_port=False):
         self.__annotate_text()
         def generator():
-            for filename in self.__picamera.capture_continuous(filename_format, **self.__capture_opts(format)):
+            for filename in self.__picamera.capture_continuous(filename_format, **self.__capture_opts(format, use_video_port)):
                 pil_postprocess(filename)
                 yield filename
                 self.__annotate_text()
@@ -51,10 +50,10 @@ class Camera:
         else:
             self.__picamera.annotate_text = None
 
-    def __capture_opts(self, format):
+    def __capture_opts(self, format, use_video_port):
         opts = {
             'format': format,
-            'use_video_port': settings.use_video_port,
+            'use_video_port': use_video_port,
         }
         if format == 'jpeg':
             opts['quality'] = settings.jpeg_quality

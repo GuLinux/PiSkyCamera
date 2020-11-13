@@ -41,7 +41,7 @@ while True:
         camera.setup_capture(profile['iso'], profile['exposure'], profile.get('awb'), profile.get('exposure_mode', 'off'))
 
     latest_capture = time.time()
-    camera.capture(filename, format=settings.file_format)
+    camera.capture(filename, format=settings.file_format, use_video_port=profile.get('use_video_port')
 
     finished = time.time()
     elapsed = finished - latest_capture 

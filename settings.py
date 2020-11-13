@@ -4,13 +4,12 @@ import os
 
 settings = {
     'resolution': (4056, 3040),
-    'use_video_port': True,
     'city': 'London',
     'file_format': 'jpeg',
     'output_directory': os.path.join(os.environ['HOME'], 'timelapse'),
     'timelapse_seconds': 10,
     'profiles': {},
-    'default_profile': { 'exposure': 0, 'iso': 100 },
+    'default_profile': { 'exposure': 0, 'iso': 100, 'exposure_mode': 'auto', 'use_video_port': False },
     'symlink_latest': True,
     'jpeg_quality': 85,
     'annotate_background': None,
