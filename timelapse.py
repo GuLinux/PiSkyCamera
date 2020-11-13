@@ -30,9 +30,8 @@ while True:
 
     profile_name = check_sun.get_profile()
     profile = settings.profiles.get(profile_name)
-    logging.debug('{}: {}'.format(profile_name, profile))
+    logging.debug('{}: {}{}'.format(profile_name, profile, '' if profile else ' - profile undefined, using default: {}'.format(settings.default_profile)))
     if not profile:
-        logging.debug('Profile {} not defined, using default'.format(profile_name))
         profile_name = 'default'
         profile = settings.default_profile
 
