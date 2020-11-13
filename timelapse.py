@@ -29,8 +29,12 @@ while True:
     filename = time.strftime(output_file_format)
 
     profile_name = check_sun.get_profile()
-    profile = settings.profiles.get(profile_name, settings.default_profile)
+    profile = settings.profiles.get(profile_name)
     logging.debug('{}: {}'.format(profile_name, profile))
+    if not profile:
+        logging.debug('Profile {} not defined, using default'.format(profile_name))
+        profile_name = 'default'
+        profile = settings.default_profile
 
     if last_profile != profile_name:
         logging.info('Switching profile : {} => {}'.format(last_profile, profile_name))

@@ -34,5 +34,9 @@ class CheckSun:
             return 'twilight_bright'
         if self.is_civil_twilight():
             return 'twilight'
+        if self.is_nautical_twilight():
+            return 'nautical_twilight'
+        if self.is_astronomical_twilight():
+            return 'astronomical_twilight'
         return 'night'
 
