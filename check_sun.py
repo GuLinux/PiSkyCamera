@@ -1,30 +1,42 @@
 import ephem
 import math
 
+ASTRONOMICAL_TWILIGHT_ANGLE = -18
+NAUTICAL_TWILIGHT_ANGLE = -12
+CIVIL_TWILIGHT_ANGLE = -6
+CLOSE_TO_SUNRISE_SUNSET_ANGLE = -2
+
 class CheckSun:
     def __init__(self, city):
         self.city = ephem.city(city)
         self.sun = ephem.Sun()
 
     def is_daylight(self):
-        return self.__compare(0) >= 0
+        return self.get_sun_angle() > 0
 
     def is_sun_close_to_horizon(self, degrees=-2):
-        return self.__compare(degrees) >= 0 and not self.is_daylight()
+        return 0 > self.get_sun_angle() >= CLOSE_TO_SUNRISE_SUNSET_ANGLE
 
     def is_civil_twilight(self):
-        return self.__compare(0) < 0 and not self.is_nautical_twilight() and not self.is_astronomical_twilight()
+        return CLOSE_TO_SUNRISE_SUNSET_ANGLE > self.get_sun_angle() >= CIVIL_TWILIGHT_ANGLE
 
     def is_nautical_twilight(self):
-        return self.__compare(-6) < 0 and not self.is_astronomical_twilight()
+        return CIVIL_TWILIGHT_ANGLE > self.get_sun_angle() >= NAUTICAL_TWILIGHT_ANGLE
 
     def is_astronomical_twilight(self):
-        return self.__compare(-18) < 0
+        return NAUTICAL_TWILIGHT_ANGLE > self.get_sun_angle() >= ASTRONOMICAL_TWILIGHT_ANGLE
 
     def __compare(self, degrees=0):
         self.city.date = ephem.now()
         self.sun.compute(self.city)
         return self.sun.alt - ephem.degrees(math.radians(degrees))
+
+    def get_sun_angle(self):
+        self.city.date = ephem.now()
+        self.sun.compute(self.city)
+        return math.degrees(self.sun.alt)
+ 
+
 
         
     def get_profile(self):
