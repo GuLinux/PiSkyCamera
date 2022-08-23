@@ -1,4 +1,5 @@
 from collections import namedtuple
+import json
 import logging
 import os
 
@@ -8,11 +9,13 @@ settings = {
     'city': 'London',
     'file_format': 'jpeg',
     'output_directory': os.path.join(os.environ['HOME'], 'timelapse'),
+    'move_to_directory': None,
     'timelapse_seconds': 10,
     'profiles': {},
     'file_timestamp_format': '%Y-%m-%dT%H-%M-%S',
     'default_profile': { 'exposure': 0, 'iso': 100, 'exposure_mode': 'auto', 'use_video_port': False },
     'symlink_latest': True,
+    'copy_latest': False,
     'jpeg_quality': 85,
     'annotate_background': None,
     'annotate_foreground': None,
@@ -42,5 +45,14 @@ if os.path.isfile('local_settings.py'):
     import local_settings
     settings.update(local_settings.settings)
 
+settings['file_ext'] = 'jpg' if settings.get('file_format') == 'jpeg' else settings.get('file_format')
+settings['latest_path'] = os.path.join(settings['output_directory'], 'latest.{}'.format(settings['file_ext']))
+settings['preview_path'] = os.path.join(settings['output_directory'], settings['pil_save_preview']['filename']) if settings['pil_save_preview'] and 'filename' in settings['pil_save_preview'] else None
+
+
+
+print(f'Loaded settings: \n{json.dumps(settings, indent=4)}')
 Settings = namedtuple('Settings', settings.keys())
 settings = Settings(**settings)
+
+

@@ -3,12 +3,12 @@ from check_sun import CheckSun
 from camera import Camera
 import time
 import os
+import shutil
 import sys
 from settings import settings
 from logger import logging
 
 logging.debug('Settings: {}'.format(settings))
-file_ext = 'jpg' if settings.file_format == 'jpeg' else settings.file_format
 
 camera = Camera(resolution=settings.resolution)
 check_sun = CheckSun(settings.city)
@@ -16,13 +16,16 @@ check_sun = CheckSun(settings.city)
 
 
 last_profile = None
-output_file_format = os.path.join(settings.output_directory, '{}.{}'.format(settings.file_timestamp_format, file_ext))
+output_file_format = os.path.join(settings.output_directory, '{}.{}'.format(settings.file_timestamp_format, settings.file_ext))
+os.makedirs(settings.output_directory, exist_ok=True)
+if settings.move_to_directory:
+    os.makedirs(settings.move_to_directory, exist_ok=True)
+
 
 def symlink_latest(filename):
-    latest_file = os.path.join(settings.output_directory, 'latest.{}'.format(file_ext))
-    if os.path.islink(latest_file):
-        os.remove(latest_file)
-    os.symlink(filename, latest_file)
+    if os.path.islink(settings.latest_path):
+        os.remove(settings.latest_path)
+    os.symlink(filename, settings.latest_path)
 
 
 while True:
@@ -48,11 +51,12 @@ while True:
 
     finished = time.time()
     elapsed = finished - latest_capture 
+
     sleep_time = max(0, settings.timelapse_seconds - elapsed)
     logging.debug('{}, {}: elapsed: {}, sleeping for: {}'.format(profile_name, filename, elapsed, sleep_time))
+
     if settings.symlink_latest:
         symlink_latest(filename)
+
     time.sleep(sleep_time)
-
-
 
